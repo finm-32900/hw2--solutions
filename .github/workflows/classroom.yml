@@ -1,0 +1,28 @@
+name: GitHub Classroom Workflow
+
+on:
+  - push
+  - workflow_dispatch
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  build:
+    name: Autograding
+    runs-on: self-hosted
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "This was run in this directory $(pwd)"
+      - run: mkdir src
+      - name: Echo from another directory
+        working-directory: ./src
+        run: echo "This was run in this directory $(pwd)"
+      - run: echo "This was run in this directory $(pwd)"
+      - run: echo "This is OUTPUT_DIR $OUTPUT_DIR"
+      - run: echo "This is DATA_DIR $DATA_DIR"
+      - run: echo "This is WRDS_USERNAME $WRDS_USERNAME"
+      - uses: education/autograding@v1
