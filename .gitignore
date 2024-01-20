@@ -247,3 +247,5 @@ src/data/temp\.csv
 drafts/draft_bp.pdf
 
 *.vrb
+
+data/manual/cps.csv

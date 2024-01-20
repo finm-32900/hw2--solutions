@@ -8,15 +8,17 @@ sys.path.insert(1, './src/')
 import config
 from pathlib import Path
 from doit.tools import run_once
+import os
+import shutil
 
 
-OUTPUT_DIR = Path(config.output_dir)
-DATA_DIR = Path(config.data_dir)
+OUTPUT_DIR = Path(config.OUTPUT_DIR)
+DATA_DIR = Path(config.DATA_DIR)
 
 # fmt: off
 ## Helper functions for automatic execution of Jupyter notebooks
 def jupyter_execute_notebook(notebook):
-    return f"jupyter nbconvert --execute --to notebook --ClearMetadataPreprocessor.enabled=True --inplace ./src/{notebook}.ipynb"
+    return f"jupyter nbconvert --execute --to notebook --inplace ./src/{notebook}.ipynb"
 def jupyter_to_html(notebook, output_dir=OUTPUT_DIR):
     return f"jupyter nbconvert --to html --output-dir={output_dir} ./src/{notebook}.ipynb"
 def jupyter_to_md(notebook, output_dir=OUTPUT_DIR):
@@ -30,11 +32,20 @@ def jupyter_clear_output(notebook):
 # fmt: on
 
 
+
+# # Check if .env file exists. If not, create it by copying from .env.example
+# env_file = ".env"
+# env_example_file = "example.env"
+
+# if not os.path.exists(env_file):
+#     shutil.copy(env_example_file, env_file)
+
+
 def task_pull_fred():
     """ """
     file_dep = ["./src/load_fred.py"]
-    file_output = [DATA_DIR / "pulled" / "fred.parquet"]
-    targets = [OUTPUT_DIR / file for file in file_output]
+    file_output = ["fred_wages.parquet"]
+    targets = [DATA_DIR / "pulled" / file for file in file_output]
 
     return {
         "actions": [
@@ -46,73 +57,21 @@ def task_pull_fred():
     }
 
 
-# def task_pull_data_via_presto():
-#     """
-#     Run several data pulls
-
-#     This will run commands like this:
-#     presto-cli --output-format=CSV_HEADER --file=/data/unixhome/src/sql_gross_performance.sql > /data/unixhome/src/sometest.csv
-
-#     """
-#     sql_pulls_dict = {
-#         'sometest.sql':'sometest.csv',
-#     }
-#     file_dep = list(sql_pulls_dict.keys())
-#     file_output = list(sql_pulls_dict.values())
-
-#     targets = [PRIVATE_DATA_DIR / 'sql_pulled' / file for file in file_output]
-
-#     def action_string(sql_file, csv_output):
-#         s = f"""
-#             ssh sql.someurl.com <<-'ENDSSH'
-#             echo Starting Presto Pull Command for {sql_file}
-#             cd {getcwd()}
-#             presto-cli --output-format=CSV_HEADER --file={sql_file} > {csv_output}
-#             """
-#         return s
-#     actions = [
-#                 action_string(sql_file,
-#                               (PRIVATE_DATA_DIR / 'sql_pulled' / sql_pulls_dict[sql_file])
-#                               ) for sql_file in sql_pulls_dict
-#             ]
-#     return {
-#         "actions":actions,
-#         "targets": targets,
-#         'task_dep':[],
-#         "file_dep": file_dep,
-#     }
-
-
-def task_summary_stats():
+def task_pull_fred():
     """ """
-    file_dep = ["./src/example_table.py"]
-    file_output = ["example_table.tex"]
-    targets = [OUTPUT_DIR / file for file in file_output]
+    file_dep = ["./src/load_fred.py"]
+    file_output = ["fred_wages.parquet"]
+    targets = [DATA_DIR / "pulled" / file for file in file_output]
 
     return {
         "actions": [
-            "ipython ./src/example_table.py",
+            "ipython ./src/load_fred.py",
         ],
         "targets": targets,
         "file_dep": file_dep,
         "clean": True,
     }
 
-
-def task_example_plot():
-    """Example plots"""
-    file_dep = [Path("./src") / file for file in ["example_plot.py", "load_fred.py"]]
-    file_output = ["example_plot.png"]
-    targets = [OUTPUT_DIR / file for file in file_output]
-
-    return {
-        "actions": [
-            "ipython ./src/example_plot.py",
-        ],
-        "targets": targets,
-        "file_dep": file_dep,
-        "clean": True,
-    }
 
 
 def task_convert_notebooks_to_scripts():
@@ -123,7 +82,7 @@ def task_convert_notebooks_to_scripts():
     build_dir.mkdir(parents=True, exist_ok=True)
 
     notebooks = [
-        "01_example_notebook.ipynb",
+        "01_wage_growth_during_the_recession.ipynb",
     ]
     file_dep = [Path("./src") / file for file in notebooks]
     stems = [notebook.split(".")[0] for notebook in notebooks]
@@ -132,7 +91,7 @@ def task_convert_notebooks_to_scripts():
     actions = [
         # *[jupyter_execute_notebook(notebook) for notebook in notebooks_to_run],
         # *[jupyter_to_html(notebook) for notebook in notebooks_to_run],
-        *[jupyter_clear_output(notebook) for notebook in stems],
+        # *[jupyter_clear_output(notebook) for notebook in stems],
         *[jupyter_to_python(notebook, build_dir) for notebook in stems],
     ]
     return {
@@ -149,18 +108,19 @@ def task_run_notebooks():
     Execute notebooks with summary stats and plots and remove metadata.
     """
     notebooks_to_run_as_md = [
-        "01_example_notebook.ipynb",
+        "01_wage_growth_during_the_recession.ipynb",
     ]
     stems = [notebook.split(".")[0] for notebook in notebooks_to_run_as_md]
 
     file_dep = [
-        # 'load_other_data.py',
+        ## 01_wage_growth_during_the_recession.ipynb
+        "./src/load_fred.py",
+        "./src/load_cps.py",
+        "./src/wage_growth_analytics.py",
         *[Path(OUTPUT_DIR) / f"_{stem}.py" for stem in stems],
     ]
 
     targets = [
-        ## 01_example_notebook.ipynb output
-        OUTPUT_DIR / "sine_graph.png",
         ## Notebooks converted to HTML
         *[OUTPUT_DIR / f"{stem}.html" for stem in stems],
     ]
@@ -168,7 +128,7 @@ def task_run_notebooks():
     actions = [
         *[jupyter_execute_notebook(notebook) for notebook in stems],
         *[jupyter_to_html(notebook) for notebook in stems],
-        *[jupyter_clear_output(notebook) for notebook in stems],
+        # *[jupyter_clear_output(notebook) for notebook in stems],
         # *[jupyter_to_python(notebook, build_dir) for notebook in notebooks_to_run],
     ]
     return {
@@ -176,6 +136,24 @@ def task_run_notebooks():
         "targets": targets,
         "task_dep": [],
         "file_dep": file_dep,
+        "clean": True,
+    }
+
+
+
+def task_copy_notebook_assets():
+    """Copy all files from ./src/assets to OUTPUT_DIR / 'assets'"""
+    assets_dir = Path("./src/assets")
+    assets = [file for file in assets_dir.glob("*") if file.is_file()]
+
+    ## if OUTPUT_DIR / "assets" doesn't exist, create it
+    (OUTPUT_DIR / "assets").mkdir(parents=True, exist_ok=True)
+
+    targets = [OUTPUT_DIR / "assets" / file.name for file in assets]
+    return {
+        "actions": [f"cp {asset} {OUTPUT_DIR / 'assets'}" for asset in assets],
+        "targets": targets,
+        "file_dep": assets,
         "clean": True,
     }
 
@@ -212,29 +190,29 @@ def task_run_notebooks():
 #     }
 
 
-def task_compile_latex_docs():
-    """Example plots"""
-    file_dep = [
-        "./reports/report_example.tex",
-        "./reports/slides_example.tex",
-        "./src/example_plot.py",
-        "./src/example_table.py",
-    ]
-    file_output = [
-        "./reports/report_example.pdf",
-        "./reports/slides_example.pdf",
-    ]
-    targets = [file for file in file_output]
+# def task_compile_latex_docs():
+#     """Example plots"""
+#     file_dep = [
+#         "./reports/report_example.tex",
+#         "./reports/slides_example.tex",
+#         "./src/example_plot.py",
+#         "./src/example_table.py",
+#     ]
+#     file_output = [
+#         "./reports/report_example.pdf",
+#         "./reports/slides_example.pdf",
+#     ]
+#     targets = [file for file in file_output]
 
-    return {
-        "actions": [
-            "latexmk -xelatex -cd ./reports/report_example.tex",  # Compile
-            "latexmk -xelatex -c -cd ./reports/report_example.tex",  # Clean
-            "latexmk -xelatex -cd ./reports/slides_example.tex",  # Compile
-            "latexmk -xelatex -c -cd ./reports/slides_example.tex",  # Clean
-            # "latexmk -CA -cd ../reports/",
-        ],
-        "targets": targets,
-        "file_dep": file_dep,
-        "clean": True,
-    }
+#     return {
+#         "actions": [
+#             "latexmk -xelatex -cd ./reports/report_example.tex",  # Compile
+#             "latexmk -xelatex -c -cd ./reports/report_example.tex",  # Clean
+#             "latexmk -xelatex -cd ./reports/slides_example.tex",  # Compile
+#             "latexmk -xelatex -c -cd ./reports/slides_example.tex",  # Clean
+#             # "latexmk -CA -cd ../reports/",
+#         ],
+#         "targets": targets,
+#         "file_dep": file_dep,
+#         "clean": True,
+#     }
