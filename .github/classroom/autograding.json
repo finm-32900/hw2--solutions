@@ -1,144 +1,134 @@
 {
-    "tests": [
-      {
-        "name": "test_exercise_01.py::test_series_from_ofr_api",
-        "setup": "",
-        "run": "pytest test_exercise_01.py::test_pull_fred_repo_data__transforms",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_01.py::test_series_descriptions",
-        "setup": "",
-        "run": "pytest test_exercise_01.py::test_series_descriptions",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_01.py::test_pull_fred_repo_data__shape",
-        "setup": "",
-        "run": "pytest test_exercise_01.py::test_pull_fred_repo_data__shape",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_01.py::test_pull_fred_repo_data__nans",
-        "setup": "",
-        "run": "pytest test_exercise_01.py::test_pull_fred_repo_data__nans",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_02.py::test_series_from_ofr_api",
-        "setup": "",
-        "run": "pytest test_exercise_02.py::test_series_from_ofr_api",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_02.py::test_series_descriptions",
-        "setup": "",
-        "run": "pytest test_exercise_02.py::test_series_descriptions",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_02.py::test_pull_repo_data__shape",
-        "setup": "",
-        "run": "pytest test_exercise_02.py::test_pull_repo_data__shape",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_03.py::test_series_descriptions",
-        "setup": "",
-        "run": "pytest test_exercise_03.py::test_series_descriptions",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_03.py::test_load_all",
-        "setup": "",
-        "run": "pytest test_exercise_03.py::test_load_all",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_04.py::test_kahn_et_al_2023_figure_1",
-        "setup": "",
-        "run": "pytest test_exercise_04.py::test_kahn_et_al_2023_figure_1",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_04.py::test_spike_days",
-        "setup": "",
-        "run": "pytest test_exercise_04.py::test_spike_days",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_05.py::test_introduction_to_github",
-        "setup": "",
-        "run": "pytest test_exercise_05.py::test_introduction_to_github",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_05.py::test_communicate_using_markdown",
-        "setup": "",
-        "run": "pytest test_exercise_05.py::test_communicate_using_markdown",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      },
-      {
-        "name": "test_exercise_05.py::test_github_pages",
-        "setup": "",
-        "run": "pytest test_exercise_05.py::test_github_pages",
-        "input": "",
-        "output": "",
-        "comparison": "exact",
-        "timeout": 10,
-        "points": 1
-      }
-    ]
-  }
+  "tests": [
+    {
+      "name": "test_load_fred.py::test_pull_all",
+      "setup": "",
+      "run": "pytest ./src/test_load_fred.py::test_pull_all",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_load_fred.py::test_pull_all_date_range",
+      "setup": "",
+      "run": "pytest ./src/test_load_fred.py::test_pull_all_date_range",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_load_fred.py::test_series_descriptions",
+      "setup": "",
+      "run": "pytest ./src/test_load_fred.py::test_series_descriptions",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_load_fred.py::test_numbers",
+      "setup": "",
+      "run": "pytest ./src/test_load_fred.py::test_numbers",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_load_cps.py::test_df_raw_columns",
+      "setup": "",
+      "run": "pytest ./src/test_load_cps.py::test_df_raw_columns",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_load_cps.py::test_df_missing_values",
+      "setup": "",
+      "run": "pytest ./src/test_load_cps.py::test_df_missing_values",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s04",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s04",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s05",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s05",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s06",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s06",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s10",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s10",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s12",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s12",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s20",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s20",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "test_wage_growth_analytics.py::test_s21",
+      "setup": "",
+      "run": "pytest ./src/test_wage_growth_analytics.py::test_s21",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 1
+    }
+  ]
+}
