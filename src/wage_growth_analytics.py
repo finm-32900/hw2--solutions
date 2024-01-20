@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import weightedstats
 
+import config
+DATA_DIR = config.DATA_DIR
+
+import load_cps
 
 def s04_subsample(df):
     ## Select desired subsample
@@ -164,4 +168,16 @@ def s24_demographically_adj_series(df, tdf):
     return tdf
 
 if __name__ == "__main__":
-    pass
+    df = load_cps.load_clean(DATA_DIR, start_date="2000-01-01", end_date="2024-01-01")
+    df = s04_subsample(df)
+    df = s05_new_vars(df)
+    df = s06_drop(df)
+    df = s10_drop_by_percentiles(df)
+    tdf = s12_time_series(df)
+    df = s20_bin_vars(df)
+    group_means = s21_within_group_averages(df)
+    tdf = s24_demographically_adj_series(df, tdf)
+    # Save to the pulled subdirectory because this data is automatically derived
+    # from another source (even if the original source is from manual, this goes
+    # in the pulled subdirectory because it's automatically created)
+    tdf.to_parquet(DATA_DIR / "pulled" / "wage_growth.parquet")

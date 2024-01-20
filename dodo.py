@@ -1,5 +1,13 @@
 """Run or update the project. This file uses the `doit` Python package. It works
 like a Makefile, but is Python-based
+
+NOTE!!!
+To complete this assignment, you must adjust this file, the dodo.py
+file, so that it will call the wage_growth_analytics.py file and
+save the time series data from it in the data/pulled directory.
+This then feeds into the next task which will create a plot
+of the time series and save the plot in the output directory.
+
 """
 import sys
 sys.path.insert(1, './src/')
@@ -14,6 +22,49 @@ import shutil
 
 OUTPUT_DIR = Path(config.OUTPUT_DIR)
 DATA_DIR = Path(config.DATA_DIR)
+
+
+
+def task_create_adjusted_wage_growth_series():
+    """ """
+    file_dep = [
+        "./src/load_fred.py",
+        "./src/load_cps.py",
+        "./src/wage_growth_analytics.py",
+        ]
+    targets = [DATA_DIR / "pulled" / "wage_growth.parquet"]
+
+    return {
+        "actions": [
+            "ipython ./src/wage_growth_analytics.py",
+        ],
+        "targets": targets,
+        "file_dep": file_dep,
+        "clean": True,
+    }
+
+
+
+def task_plot_adj_wage_growth():
+    """ """
+    file_dep = [DATA_DIR / "pulled" / "wage_growth.parquet"]
+    targets = [OUTPUT_DIR / "adj_wage_growth.png"]
+
+    return {
+        "actions": [
+            "ipython ./src/plot_adj_wage_growth.py",
+        ],
+        "targets": targets,
+        "file_dep": file_dep,
+        "clean": True,
+    }
+
+
+
+###########################################
+## Extra: Unneeded for HW
+###########################################
+
 
 # fmt: off
 ## Helper functions for automatic execution of Jupyter notebooks
@@ -40,37 +91,6 @@ def jupyter_clear_output(notebook):
 # if not os.path.exists(env_file):
 #     shutil.copy(env_example_file, env_file)
 
-
-def task_pull_fred():
-    """ """
-    file_dep = ["./src/load_fred.py"]
-    file_output = ["fred_wages.parquet"]
-    targets = [DATA_DIR / "pulled" / file for file in file_output]
-
-    return {
-        "actions": [
-            "ipython ./src/load_fred.py",
-        ],
-        "targets": targets,
-        "file_dep": file_dep,
-        "clean": True,
-    }
-
-
-def task_pull_fred():
-    """ """
-    file_dep = ["./src/load_fred.py"]
-    file_output = ["fred_wages.parquet"]
-    targets = [DATA_DIR / "pulled" / file for file in file_output]
-
-    return {
-        "actions": [
-            "ipython ./src/load_fred.py",
-        ],
-        "targets": targets,
-        "file_dep": file_dep,
-        "clean": True,
-    }
 
 
 
@@ -136,24 +156,6 @@ def task_run_notebooks():
         "targets": targets,
         "task_dep": [],
         "file_dep": file_dep,
-        "clean": True,
-    }
-
-
-
-def task_copy_notebook_assets():
-    """Copy all files from ./src/assets to OUTPUT_DIR / 'assets'"""
-    assets_dir = Path("./src/assets")
-    assets = [file for file in assets_dir.glob("*") if file.is_file()]
-
-    ## if OUTPUT_DIR / "assets" doesn't exist, create it
-    (OUTPUT_DIR / "assets").mkdir(parents=True, exist_ok=True)
-
-    targets = [OUTPUT_DIR / "assets" / file.name for file in assets]
-    return {
-        "actions": [f"cp {asset} {OUTPUT_DIR / 'assets'}" for asset in assets],
-        "targets": targets,
-        "file_dep": assets,
         "clean": True,
     }
 
