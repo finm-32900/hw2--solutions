@@ -10,6 +10,7 @@ import load_cps
 def s04_subsample(df):
     ## Select desired subsample
     # GQ = 0 for vacant units, 1 for Households, 2 for group quarters
+
     df = df[df["GQ"] == 1]
     #  df['SEX'] = 1 for male
     df = df[df["SEX"] == 1]
@@ -150,7 +151,7 @@ def s24_demographically_adj_series(df, tdf):
 
 
     # Create Bin Weight Sums
-    weights_2000 = (df[df.YEAR == '2000']
+    weights_2000 = (df[df['YEAR'] == '2000']
                     .dropna()
                     .groupby(by=['age_binned', 'educ_binned'], observed=False)
                     ['ASECWT']

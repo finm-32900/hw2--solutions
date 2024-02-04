@@ -47,18 +47,18 @@ def test_df_raw_columns():
 
 def test_df_missing_values():
     expected_missing_values = {
-        "YEAR": 0,
-        "GQ": 0,
-        "CPI99": 0,
-        "CPSIDV": 0,
-        "ASECWT": 0,
-        "AGE": 0,
-        "SEX": 0,
-        "LABFORCE": 1094719,
-        "EDUC": 1079107,
-        "WKSWORK1": 0,
-        "UHRSWORKLY": 2268966,
-        "INCWAGE": 0,
+        'YEAR': 0,
+        'GQ': 0,
+        'CPI99': 0,
+        'CPSIDV': 0,
+        'ASECWT': 0,
+        'AGE': 0,
+        'SEX': 0,
+        'LABFORCE': 1094719,
+        'EDUC': 1079107,
+        'WKSWORK1': 0,
+        'UHRSWORKLY': 2268966,
+        'INCWAGE': 1079107,
     }
 
     missing_values = df.isna().sum().to_dict()
